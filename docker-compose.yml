@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${CORE_PORT:-3000}:3000"
+    environment:
+      - CORE_PORT=3000
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    volumes:
+      - ./config:/config:ro
+      - ./audit-reports:/app/audit-reports
+    # Override default command to run audit with example config
+    command: ["node", "dist/index.js", "run", "--config", "/config/example.config.js"]
